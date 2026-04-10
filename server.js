@@ -12,6 +12,8 @@ import contactRoutes from './routes/contactRoutes.js';
 import ideaRoutes from './routes/ideaRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
 import serviceRoutes from './routes/serviceRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
+import path from 'path';
 
 dotenv.config();
 
@@ -36,32 +38,7 @@ const seedAdmin = async () => {
 };
 await seedAdmin();
 
-const seedDummyContent = async () => {
-  try {
-    const pCount = await Project.countDocuments();
-    if (pCount === 0) {
-      await Project.insertMany([
-        { title: 'E-commerce Platform', description: 'A fully functional online store with Stripe integration.', techStack: ['React', 'Node.js', 'MongoDB'] },
-        { title: 'Portfolio Website', description: 'A sleek, modern portfolio for a freelance designer.', techStack: ['React', 'CSS3'] },
-        { title: 'Task Manager App', description: 'A productivity app for managing daily tasks and projects.', techStack: ['Vue', 'Express'] }
-      ]);
-      console.log('Dummy projects seeded');
-    }
 
-    const sCount = await Service.countDocuments();
-    if (sCount === 0) {
-      await Service.insertMany([
-        { name: 'Web Development', description: 'Building responsive and modern web applications from scratch.' },
-        { name: 'UI/UX Design', description: 'Creating intuitive and engaging user experiences and interfaces.' },
-        { name: 'Backend Architecture', description: 'Designing robust, scalable, and secure backend systems.' }
-      ]);
-      console.log('Dummy services seeded');
-    }
-  } catch (error) {
-    console.error('Error seeding dummy content', error);
-  }
-};
-await seedDummyContent();
 
 const app = express();
 
@@ -75,6 +52,10 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/ideas', ideaRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/services', serviceRoutes);
+app.use('/api/upload', uploadRoutes);
+
+const __dirname = path.resolve();
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 app.get('/', (req, res) => {
   res.send('Backend API is successfully running...');
