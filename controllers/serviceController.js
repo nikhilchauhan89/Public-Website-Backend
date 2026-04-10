@@ -30,3 +30,19 @@ export const deleteService = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const updateService = async (req, res) => {
+  try {
+    const { name, description } = req.body;
+    const service = await Service.findById(req.params.id);
+    if (!service) return res.status(404).json({ message: 'Service not found' });
+    
+    service.name = name || service.name;
+    service.description = description || service.description;
+    
+    const updatedService = await service.save();
+    res.json(updatedService);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

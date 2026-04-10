@@ -1,5 +1,5 @@
 import express from 'express';
-import { getServices, createService, deleteService } from '../controllers/serviceController.js';
+import { getServices, createService, deleteService, updateService } from '../controllers/serviceController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -9,6 +9,7 @@ router.route('/')
   .post(protect, admin, createService);
 
 router.route('/:id')
+  .put(protect, admin, updateService)
   .delete(protect, admin, deleteService);
 
 export default router;

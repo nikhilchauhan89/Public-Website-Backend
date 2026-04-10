@@ -30,3 +30,21 @@ export const deleteProject = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const updateProject = async (req, res) => {
+  try {
+    const { title, description, techStack, image } = req.body;
+    const project = await Project.findById(req.params.id);
+    if (!project) return res.status(404).json({ message: 'Project not found' });
+    
+    project.title = title || project.title;
+    project.description = description || project.description;
+    project.techStack = techStack || project.techStack;
+    project.image = image || project.image;
+    
+    const updatedProject = await project.save();
+    res.json(updatedProject);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

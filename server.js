@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db.js';
 import User from './models/User.js';
+import Project from './models/Project.js';
+import Service from './models/Service.js';
 
 
 import authRoutes from './routes/authRoutes.js';
@@ -33,6 +35,33 @@ const seedAdmin = async () => {
   }
 };
 await seedAdmin();
+
+const seedDummyContent = async () => {
+  try {
+    const pCount = await Project.countDocuments();
+    if (pCount === 0) {
+      await Project.insertMany([
+        { title: 'E-commerce Platform', description: 'A fully functional online store with Stripe integration.', techStack: ['React', 'Node.js', 'MongoDB'] },
+        { title: 'Portfolio Website', description: 'A sleek, modern portfolio for a freelance designer.', techStack: ['React', 'CSS3'] },
+        { title: 'Task Manager App', description: 'A productivity app for managing daily tasks and projects.', techStack: ['Vue', 'Express'] }
+      ]);
+      console.log('Dummy projects seeded');
+    }
+
+    const sCount = await Service.countDocuments();
+    if (sCount === 0) {
+      await Service.insertMany([
+        { name: 'Web Development', description: 'Building responsive and modern web applications from scratch.' },
+        { name: 'UI/UX Design', description: 'Creating intuitive and engaging user experiences and interfaces.' },
+        { name: 'Backend Architecture', description: 'Designing robust, scalable, and secure backend systems.' }
+      ]);
+      console.log('Dummy services seeded');
+    }
+  } catch (error) {
+    console.error('Error seeding dummy content', error);
+  }
+};
+await seedDummyContent();
 
 const app = express();
 
